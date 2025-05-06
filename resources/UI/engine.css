@@ -1,0 +1,27 @@
+
+body {
+    position: fixed;
+    font-size: large;
+}
+
+.main {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+
+}
+
+.topbar {
+    display: flex;
+    flex-direction: row;
+    color: black;
+    font-size: xx-large;
+
+    
+}
+
+.topbar-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: white;
+}

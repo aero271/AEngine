@@ -1,0 +1,44 @@
+{
+    "root": [
+        {
+            "class": "Player",
+            "model": "",
+            "position": {
+                "x": -8.460742950439453,
+                "y": 10.499985694885254,
+                "z": -0.13368891179561615
+            },
+            "rotationAngle": 0.0,
+            "rotationAxis": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "class": "Item",
+            "model": "sword-final",
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotationAngle": 0.0,
+            "rotationAxis": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    ]
+}

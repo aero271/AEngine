@@ -144,7 +144,6 @@ int main(int argc, char** argv)
     items.saveState();
 
     } //scope block to destroy all objects needing opengl resouces before cleaning up context
-    println("djsakldjskl");
 
     // destroy the window and cleanup the OpenGL context
     RLG_DestroyContext(context);

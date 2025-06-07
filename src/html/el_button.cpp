@@ -18,10 +18,14 @@ void el_button::draw(litehtml::uint_ptr hdc, int x, int y, const litehtml::posit
         return;
     }
 
+    litehtml::position pos = ri->pos();
+    pos.x += x;
+    pos.y += y;
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         Vector2 mp = GetMousePosition();
-        if (mp.x > ri->left() && mp.x < ri->right() && mp.y > ri->top() && mp.y < ri->bottom())
+        if (mp.x > pos.left() && mp.x < pos.right() && mp.y > pos.top() && mp.y < pos.bottom())
         {
             AUI* ui = (AUI*)hdc;
             try

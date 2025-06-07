@@ -25,8 +25,8 @@ void main()
     vec3 normal = normalize(fragNormal);
     vec3 viewDir = normalize(-I);
 
+    //Fresnel-Schlick equation, calculates how much of color should be reflections and how much should be the base color
     float fresnel = 0.02 + 0.98 * pow(1.0 - max(dot(normal, viewDir), 0.0), 5.0);
 
     finalColor = vec4(mix(waterColor, reflectionColor.rgb, 1.0 * fresnel).rgb, 1.0);
-
 }

@@ -26,6 +26,8 @@
 #include "render_table.h"
 #include "render_block.h"
 
+#include <iostream>
+
 namespace litehtml
 {
 

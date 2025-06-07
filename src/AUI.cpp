@@ -15,10 +15,39 @@ bool AUI::isGame = true;
 AUI::AUI() : container(this)
 {
     //get all files in UI directory
+    loadDirectoryUI("");
+
+    if (IS_ENGINE) 
+    {
+        mode = MOUSE;
+        EnableCursor();
+    }
+    else 
+    {
+        mode = CAMERA;
+        DisableCursor();
+    }
+
+    if (IS_ENGINE)
+    {
+        loadEngineUI();
+    }
+
+    addEventListener("testtest", [](AUI* ui) {
+        ui->setCondition("iftest", !ui->getCondition("iftest"));
+        println(ui->getCondition("iftest"));
+    });
+
+
+    print("INFO: Loaded UI\n");
+}
+
+void AUI::loadDirectoryUI(std::string directory)
+{
     std::vector<std::string> files;
     try
     {
-        for (const auto& entry : fs::directory_iterator("UI"))
+        for (const auto& entry : fs::directory_iterator(std::string("UI/") + directory))
         {
             files.push_back(entry.path().filename());
         }
@@ -32,52 +61,15 @@ AUI::AUI() : container(this)
     {
         if (IsFileExtension(file.c_str(), ".html"))
         { 
-            std::string path = std::string("UI/") + file;
-            char* html = LoadFileText(path.c_str());
-            std::string name;
-            for (int i = 0; i < file.length(); i++)
-            {
-                if (file[i] == '.') 
-                {
-                    name = file.substr(0, i);
-                    break;
-                }
-            }
-            docs[name] = litehtml::document::createFromString(html, &container);
-            docs[name]->render(SCREEN_WIDTH);
-
-            if (name == "engine" && IS_ENGINE)
-            {
-                isDrawn[name] = true;
-            }
-            else
-            {
-                isDrawn[name] = false;
-            }
-
-            UnloadFileText(html);
+            addUI(directory + "/" + file);
         }
     }
+}
 
-    if (IS_ENGINE) 
-    {
-        mode = MOUSE;
-        EnableCursor();
-    }
-    else 
-    {
-        mode = CAMERA;
-        DisableCursor();
-    }
-
-    addEventListener("testtest", [](AUI* ui) {
-        println("djsaiokd");
-        ui->setCondition("iftest", !ui->getCondition("iftest"));
-        println(ui->getCondition("iftest"));
-    });
-
-
-    print("INFO: Loaded UI\n");
+void AUI::loadEngineUI()
+{
+    loadDirectoryUI("engine");
+    addUI("engine.html");
 }
 
 
@@ -105,31 +97,47 @@ void AUI::update()
     {
         isCamera = true;
     }
+
+    buttonPressListeners();
+}
+
+void AUI::buttonPressListeners()
+{
+    if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyDown(KEY_A))
+    {
+        if (docs.count("engine/add")) enableUI("engine/add");
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        if (docs.count("engine/add")) disableUI("engine/add");
+    }
 }
 
 /// @brief called after drawing 3d scene, draws ui
 void AUI::drawUI() 
 {
-
-    litehtml::position pos;
-    pos.x = 0;
-    pos.y = 0;
-    pos.width = SCREEN_WIDTH;
-    pos.height = SCREEN_HEIGHT;
+    litehtml::position pos(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     for (auto& [name, doc] : docs)
     {
-        if (isDrawn[name])
+        if (doc->enabled)
         {
-            doc->draw((litehtml::uint_ptr)this, 0, 0, &pos);
+            doc->draw(&pos);
         }
     }
-
 }
 
-void AUI::enableUI(std::string name) { isDrawn[name] = true; }
+void AUI::enableUI(std::string name) 
+{ 
+    if (docs[name]->enabled == false) docs[name]->stateChanged = true;
+    docs[name]->enabled = true; 
+}
 
-void AUI::disableUI(std::string name) { isDrawn[name] = false; }
+void AUI::disableUI(std::string name) 
+{ 
+    docs[name]->enabled = false; 
+    docs[name]->stateChanged = true;
+}
 
 void AUI::addEventListener(std::string id, std::function<void(AUI*)> callback, bool overwrite)
 {
@@ -179,11 +187,62 @@ void AUI::setCondition(std::string id, bool cond)
     conditions[id] = cond;
 }
 
+void AUI::addUI(std::string file)
+{
+    auto doc = std::make_shared<DocData>(this, nullptr, 0, 0);
+    loadUI(file, doc);
+}
+
+void AUI::addUI(std::string file, int x, int y)
+{
+    auto doc = std::make_shared<DocData>(this, nullptr, x, y);
+    loadUI(file, doc);
+}
+
+void AUI::addUI(std::string file, std::function<Vector2()> callback)
+{
+    auto doc = std::make_shared<DocData>(this, nullptr, callback);
+    loadUI(file, doc);
+}
+
+void AUI::loadUI(std::string file, std::shared_ptr<DocData> docData)
+{
+    std::string path = std::string("UI/") + file;
+    char* html = LoadFileText(path.c_str());
+    if (!html)
+    {
+        print("ERROR: failed to load UI file %1%\n", file);
+        return;
+    }
+
+    std::string name;
+    for (int i = 0; i < file.length(); i++)
+    {
+        if (file[i] == '.') 
+        {
+            name = file.substr(0, i);
+            break;
+        }
+    }
+    docData->doc = litehtml::document::createFromString(html, &container);
+    docData->doc->render(SCREEN_WIDTH);
+    docs[name] = docData;
+
+    if (name == "engine" && IS_ENGINE)
+    {
+        docs[name]->enabled= true;
+    }
+    else
+    {
+        docs[name]->enabled = false;
+    }
+
+    UnloadFileText(html);
+    print("INFO: UI %1% loaded\n", name);
+}
+
 AUI::~AUI()
 {
-    for (auto [_, doc] : docs)
-    {
-        doc.reset();
-    }
+    docs.clear();
     println("INFO: UI destroyed successfully");
 }

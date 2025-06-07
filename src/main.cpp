@@ -22,9 +22,8 @@
 
 #include "resource_dir.h" // utility header for SearchAndSetResourceDir
 #include "Item.hpp"
-#include "ALight.hpp"
+#include "Items/ALight.hpp"
 // #include "WebSocketClient.hpp"
-#include "CreateInitialState.hpp"
 #include "Water.hpp"
 #include "GlobalWater.hpp"
 #include "Items/Player.hpp"
@@ -100,27 +99,22 @@ int main(int argc, char** argv)
 
     bool tabbedState = true;
 
-    
-
     // game loop
     while (AUI::isGame)
     {
         ui.update();
         items.update();
 
+        // you might think this is rediculous, but its happened before, and i don't know why
+        if (!std::cout)
+        {
+            std::cerr<<"cout is broken\n";
+        }
+
+
         if (ui.mode == CAMERA)
         {
 
-        }
-
-        // ioc.poll();
-        //  cout << format("Object Count: %1%\n") % Item::items.size();
-
-        //shadow pass(s)
-        //TODO: refactor lights into an Item child class 
-        for (auto &light : ALight::lights)
-        {
-            light->renderLighting();
         }
 
         BeginDrawing();
@@ -135,9 +129,6 @@ int main(int argc, char** argv)
             EndMode3D();
 
             ui.drawUI();
-
-            //DrawTextEx(roboto, TextFormat("x: %f, y: %f, z: %f", player->position.x, player->position.y, player->position.z), {0.0f, 0.0f}, roboto.baseSize, 2, WHITE);
-            //DrawTextEx(roboto, TextFormat("%f FPS", (1 / GetFrameTime())), {0.0f, 30.0f}, roboto.baseSize, 2, WHITE);
 
         EndDrawing();
     }

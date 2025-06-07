@@ -53,7 +53,6 @@ GlobalWater::GlobalWater(int size_, float cellSize_, float viewDistance_, AItems
     material = LoadMaterialDefault();    
     material.shader = shader;
     RLG_Skybox* skybox = items->getCurrentSkybox();
-    println(skybox);
     if (skybox)
     {
         material.maps[MATERIAL_MAP_CUBEMAP].texture = skybox->cubemap;
@@ -71,7 +70,6 @@ void GlobalWater::updateWater(ItemPtr player)
     int xMax = player->getChunkData().chunkX + (.5 * viewDistance);
     int zMax = player->getChunkData().chunkZ + (.5 * viewDistance);
     
-    //remove irrelivant water and add there indices in the queue, telling the ssbo where to replace the data
     std::vector<std::pair<int, int>> toRemove;
     for (auto& [position, waterObj] : water)
     {

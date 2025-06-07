@@ -15,6 +15,8 @@ private:
     AUI* ui;
 
     std::list<std::shared_ptr<litehtml::render_item>> backupChildren;
+    std::shared_ptr<litehtml::element> emptyElement;
+    std::shared_ptr<litehtml::render_item> emptyElementRi;
 
 public:
     el_if(const std::shared_ptr<litehtml::document>& doc, AUI* ui);
@@ -22,4 +24,11 @@ public:
     void parse_attributes() override;
 
     void draw(litehtml::uint_ptr hdc, int x, int y, const litehtml::position *clip, const std::shared_ptr<litehtml::render_item> &ri) override;
+};
+
+class el_test : public litehtml::html_tag
+{
+public:
+    el_test(const std::shared_ptr<litehtml::document>& doc, AUI* ui);
+
 };

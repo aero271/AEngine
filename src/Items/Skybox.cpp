@@ -30,7 +30,6 @@ RLG_Skybox* Skybox::getSkybox()
 void Skybox::render()
 {
     RLG_DrawSkybox(skybox);
-    println("dasda");
 }
 
 Skybox::~Skybox()

@@ -15,7 +15,7 @@ class DocumentContainer : public litehtml::document_container
 {
 public:
     DocumentContainer(AUI* ui);
-    ~DocumentContainer();
+    virtual ~DocumentContainer();
 
 	litehtml::uint_ptr  create_font(const font_description& descr, const document* doc, litehtml::font_metrics* fm) override;
     void                delete_font(uint_ptr hFont) override;

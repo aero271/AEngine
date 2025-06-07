@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1 class="title" style="color: white;">UI example #1</h1>
+    
+    <div class="bottom">
+        <img src="loki-icon.png" class="loki-icon"/> 
+        <img src="loki-weapon.png" class="loki-weapon"/>
+        <div class="ammo">12/12</div>
+        <img src="health-bar.png" class="health-bar"/>
+        <img src="abilities.png" class="abilities"/>
+    </div>
+
+
+    <style>
+        .title {
+            position: absolute; 
+            top: 2em;
+            left: 2em;
+        }
+
+        .bottom {
+            position: absolute;
+            display: flex;
+            bottom: 10px;
+            left: 0;
+            align-items: center;
+            width: 100vw;
+        }
+
+        .loki-icon {
+            margin-left: 50px;
+        }
+
+        .loki-weapon {
+            margin-left: 10px;
+        }
+
+        .ammo {
+            font-size: 20px;
+            color: white;
+        }
+
+        .health-bar {
+            position: relative;            
+            left: 1000px;
+
+        }
+
+        .abilities {
+            position: relative;
+            left: 2000px;
+        }
+
+
+    </style>
+    
+</body>
+</html>

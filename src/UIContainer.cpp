@@ -6,6 +6,7 @@
 #include "glad.h"
 #include "html/el_button.hpp"
 #include "html/el_if.hpp"
+#include "html/el_input.hpp"
 #include "AUI.hpp"
 
 using namespace litehtml;
@@ -32,7 +33,7 @@ DocumentContainer::DocumentContainer(AUI* ui) : ui(ui)
     }
 }
 
-DocumentContainer::~DocumentContainer()
+DocumentContainer::~DocumentContainer() 
 {
     for (auto& [_, image] : images)
     {
@@ -103,6 +104,7 @@ void DocumentContainer::load_image(const char* src, const char* baseurl, bool re
     std::string imagePath;
     if (baseurl) imagePath = std::string(baseurl) + src;
     else imagePath = std::string(src);
+    imagePath = std::string("textures/") + imagePath;
 
     if (images.find(imagePath) != images.end()) return;
 
@@ -115,6 +117,7 @@ void DocumentContainer::get_image_size(const char* src, const char* baseurl, lit
     std::string imagePath;
     if (baseurl) imagePath = std::string(baseurl) + src;
     else imagePath = std::string(src);
+    imagePath = std::string("textures/") + imagePath;
 
     sz.height = images[imagePath].height;
     sz.width = images[imagePath].width;
@@ -123,6 +126,7 @@ void DocumentContainer::get_image_size(const char* src, const char* baseurl, lit
 void DocumentContainer::draw_image(litehtml::uint_ptr hdc, const background_layer& layer, const std::string& url, const std::string& base_url)
 {
     std::string imagePath = base_url + url;
+    imagePath = std::string("textures/") + imagePath;
 
     int x = layer.origin_box.x;
     int y = layer.origin_box.y;
@@ -190,8 +194,15 @@ void DocumentContainer::import_css(litehtml::string& text, const litehtml::strin
 {
     std::string path = std::string("UI/") + baseurl + url;
     char* css = LoadFileText(path.c_str()); 
-    text = std::string(css);
-    UnloadFileText(css);
+    if (css)
+    {
+        text = std::string(css);
+        UnloadFileText(css);
+    }
+    else 
+    {
+        print("ERROR: css file %1% not found\n", path);
+    }
 }
 
 
@@ -223,6 +234,14 @@ litehtml::element::ptr DocumentContainer::create_element(const char* tag_name, c
     else if (tag == "if")
     {
         return std::make_shared<el_if>(doc, ui);
+    }
+    else if (tag == "test")
+    {
+        return std::make_shared<el_test>(doc, ui);
+    }
+    else if (tag == "input")
+    {
+        return std::make_shared<el_input>(doc, ui);
     }
     return nullptr;
 }

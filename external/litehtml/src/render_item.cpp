@@ -3,6 +3,7 @@
 #include "document.h"
 #include <typeinfo>
 #include <utf8_strings.h>
+#include <iostream>
 
 litehtml::render_item::render_item(std::shared_ptr<element>  _src_el) :
         m_element(std::move(_src_el)),
@@ -753,6 +754,12 @@ void litehtml::render_item::calc_document_size( litehtml::size& sz, litehtml::si
 
 void litehtml::render_item::draw_stacking_context( uint_ptr hdc, int x, int y, const position* clip, bool with_positioned )
 {
+    const char* namea = src_el()->get_attr("name");
+
+    if (namea)
+    {
+        std::cout<<" "<<std::string(namea)<<": "<<m_skip<<"\n";
+    }
     if(!is_visible()) return;
 
     std::map<int, bool> z_indexes;

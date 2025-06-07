@@ -1,5 +1,5 @@
 
-#include "ALight.hpp"
+#include "Items/ALight.hpp"
 #include "Water.hpp"
 #include "definitions.hpp"
 #include <raymath.h>
@@ -9,7 +9,6 @@
 
 using boost::format;
 
-std::vector<ALight*> ALight::lights;
 
 AItems* items;
 
@@ -26,24 +25,7 @@ ALight::ALight(Vector3 pos, Vector3 target, Color color, RLG_LightType type, boo
 {
     items = items_;
     position = pos;
-    lights.push_back(this);
 
-    //ensures id is initialized to an untaken value to prevent duplicates
-    if (lights.size() > 1)
-    {
-        for (int i = 0; i < lights.size(); i++)
-        {
-            if (lights[i] == this)
-            {
-                id = lights[i - 1]->id + 1;
-                break;
-            }
-        }
-    }
-    else //if its the first light, set id to zero
-    {
-        id = 0;
-    }
 
     //rlights config
     RLG_UseLight(id, true);
@@ -93,15 +75,4 @@ void ALight::updateDistance(float newDistance)
 
 ALight::~ALight()
 {
-    //finds and erases lights from light array
-    int offset;
-    for (int i = 0; i < lights.size(); i++)
-    {
-        if (lights[i] == this)
-        {
-            offset = i;
-            break;
-        }
-    }
-    lights.erase(lights.begin() + offset);
 }

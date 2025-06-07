@@ -5,24 +5,23 @@
 #include <vector>
 #include <memory>
 
+
 class AItems;
 
 class ALight : public Item
 {
 private:
-    int id;
-
-public:
-    ///global lights container for rendering
-    static std::vector<ALight*> lights;
-
     ///setter must be used
     bool hasModel = false;
     bool shadow = false;
     ///setter must be used
     float energy;
+
+public:
     
     ALight(Vector3 pos, Vector3 target, Color color, RLG_LightType type, bool hasShadow, AItems* items_);
+    ALight(AItems* items, json& item);
+    virtual std::string getClass() const override { return "ALight"; }
     
     void updatePosition(Vector3 newPosistion);
     void updateTarget(Vector3 newTarget);

@@ -35,6 +35,7 @@ namespace litehtml
 		}
 
     public:
+
         explicit render_item(std::shared_ptr<element>  src_el);
 
         virtual ~render_item() = default;

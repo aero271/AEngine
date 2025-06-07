@@ -76,7 +76,6 @@ Item::Item(AItems* items, json& item) : items(items)
     initChunk();
     if (name != "")
     {
-        println(items->isModelLoaded(name));
         if (!items->isModelLoaded(name))
         {
             items->loadModel(name);
